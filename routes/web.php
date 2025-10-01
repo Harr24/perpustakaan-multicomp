@@ -7,8 +7,13 @@ use App\Http\Controllers\Admin\Petugas\VerificationController;
 use App\Http\Controllers\Admin\Petugas\GenreController;
 use App\Http\Controllers\Admin\Petugas\BookController;
 use App\Http\Controllers\Admin\Superadmin\SuperadminPetugasController;
+<<<<<<< HEAD
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BorrowingController;
+=======
+use App\Http\Controllers\ProfileController; // Pastikan ini ada
+use App\Http\Controllers\BorrowingController; // Pastikan ini ada
+>>>>>>> 57cee468968a96b467ceee499605b2143e369bf3
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +27,12 @@ Route::get('/book/{book}', [BookCatalogController::class, 'show'])->name('catalo
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('register', [AuthController::class, 'register']);
+    
+    // Rute untuk halaman sukses setelah registrasi
+    Route::get('register/success', [AuthController::class, 'registrationSuccess'])->name('register.success');
+    
+    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('login', [AuthController::class, 'login']);
 });
 
@@ -32,13 +41,20 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     
     // Rute umum (semua role bisa akses)
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard', function(){ return view('dashboard'); })->name('dashboard');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
+<<<<<<< HEAD
     // Rute untuk peminjaman buku
     Route::get('/riwayat-peminjaman', [BorrowingController::class, 'index'])->name('borrow.history');
     Route::post('/pinjam/{book_copy}', [BorrowingController::class, 'store'])->name('borrow.store');
+=======
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+>>>>>>> 57cee468968a96b467ceee499605b2143e369bf3
 
+    // Rute untuk peminjaman
+    Route::post('/borrow/{book_copy}', [BorrowingController::class, 'store'])->name('borrow.store');
 
     // == RUTE KHUSUS UNTUK ROLE PETUGAS ==
     Route::middleware('role:petugas')->prefix('admin/petugas')->name('admin.petugas.')->group(function () {
@@ -56,10 +72,5 @@ Route::middleware('auth')->group(function () {
     // == RUTE KHUSUS UNTUK ROLE SUPERADMIN ==
     Route::middleware('role:superadmin')->prefix('admin/superadmin')->name('admin.superadmin.')->group(function () {
         Route::resource('petugas', SuperadminPetugasController::class);
-
-        // Rute untuk Edit Profil Superadmin
-        Route::get('/profile', [SuperadminPetugasController::class, 'showProfileForm'])->name('profile.edit');
-        Route::put('/profile', [SuperadminPetugasController::class, 'updateProfile'])->name('profile.update');
     });
 });
-
