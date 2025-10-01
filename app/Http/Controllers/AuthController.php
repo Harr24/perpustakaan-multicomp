@@ -30,16 +30,19 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // 2. Simpan file foto ke storage
-        $path = $request->file('student_card_photo')->store('public/student_cards');
+        // 2. Simpan file foto ke storage dengan cara yang benar
+        // PERUBAHAN UTAMA DI SINI:
+        // Ini akan menyimpan file di 'storage/app/public/student_cards'
+        // dan mengembalikan path 'student_cards/namafile.jpg' untuk database.
+        $path = $request->file('student_card_photo')->store('student_cards', 'public');
 
         // 3. Buat user baru dengan status PENDING dan role SISWA
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'student_card_photo' => $path,
-            'role' => 'siswa', // <-- BARIS INI DITAMBAHKAN
+            'student_card_photo' => $path, // Simpan path yang benar
+            'role' => 'siswa',
             'account_status' => 'pending',
         ]);
 

@@ -12,6 +12,12 @@ class VerificationController extends Controller
     /**
      * Menampilkan daftar siswa yang statusnya pending.
      */
+
+    public function showPhoto(User $user)
+    {
+        // Cukup tampilkan view dan kirim data user yang bersangkutan
+        return view('admin.petugas.verification.show_photo', compact('user'));
+    }
     public function index()
     {
         $pendingUsers = User::where('role', 'siswa')

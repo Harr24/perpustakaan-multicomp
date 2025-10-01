@@ -8,7 +8,7 @@ use App\Http\Controllers\Admin\Petugas\GenreController;
 use App\Http\Controllers\Admin\Petugas\BookController;
 use App\Http\Controllers\Admin\Superadmin\SuperadminPetugasController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\BorrowingController; // Pastikan ini ada
+use App\Http\Controllers\BorrowingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,9 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-    // ===================================================
-    // PERUBAHAN DI SINI: RUTE UNTUK PEMINJAMAN BUKU
-    // ===================================================
+    // Rute untuk peminjaman buku
     Route::get('/riwayat-peminjaman', [BorrowingController::class, 'index'])->name('borrow.history');
     Route::post('/pinjam/{book_copy}', [BorrowingController::class, 'store'])->name('borrow.store');
 
@@ -47,6 +45,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/verifikasi-siswa', [VerificationController::class, 'index'])->name('verification.index');
         Route::post('/verifikasi-siswa/{user}/approve', [VerificationController::class, 'approve'])->name('verification.approve');
         Route::post('/verifikasi-siswa/{user}/reject', [VerificationController::class, 'reject'])->name('verification.reject');
+        
+        // PERUBAHAN DI SINI: Rute baru untuk menampilkan halaman foto
+        Route::get('/verifikasi-siswa/{user}/foto', [VerificationController::class, 'showPhoto'])->name('verification.showPhoto');
         
         Route::resource('genres', GenreController::class);
         Route::resource('books', BookController::class);
